@@ -268,11 +268,6 @@
     transform: translateY(-2px);
     box-shadow: var(--shadow-sm);
   }
-  .option-card .oc-icon {
-    font-size: 22px;
-    margin-bottom: 8px;
-    display: block;
-  }
   .option-card .oc-title {
     font-family: 'DM Sans', sans-serif;
     font-weight: 500;
@@ -724,7 +719,7 @@
     <div class="step-dot" id="dot4">4</div>
   </div>
 
-  <!-- ─────────── STEP 1 ─────────── -->
+  <!-- STEP 1 -->
   <div id="step1" class="card">
     <div class="step-label">Step 01 of 04</div>
     <h2>Who is this framework for?</h2>
@@ -732,24 +727,21 @@
 
     <div class="option-grid">
       <div class="option-card" onclick="setProject('Student Project')">
-        <span class="oc-icon">🎓</span>
         <div class="oc-title">Student Projects</div>
         <div class="oc-desc">Academic or coursework data science projects</div>
       </div>
       <div class="option-card" onclick="setProject('Organization')">
-        <span class="oc-icon">🏢</span>
         <div class="oc-title">Organizations</div>
         <div class="oc-desc">Company-level teams and enterprise data work</div>
       </div>
       <div class="option-card" onclick="setProject('Mixed')">
-        <span class="oc-icon">⚡</span>
         <div class="oc-title">Mixed / Any</div>
         <div class="oc-desc">Flexible — suitable for any data science project</div>
       </div>
     </div>
   </div>
 
-  <!-- ─────────── STEP 2 ─────────── -->
+  <!-- STEP 2 -->
   <div id="step2" class="card hidden">
     <div class="step-label">Step 02 of 04</div>
     <h2>Choose your framework format</h2>
@@ -764,15 +756,15 @@
     <div class="checkbox-group">
       <label class="checkbox-item" id="lbl-principles">
         <input type="checkbox" id="principles" onchange="toggleChecked(this, 'lbl-principles')">
-        <span class="ci-label">📜 Principles Guide</span>
+        <span class="ci-label">Principles Guide</span>
       </label>
       <label class="checkbox-item" id="lbl-checklist">
         <input type="checkbox" id="checklist" onchange="toggleChecked(this, 'lbl-checklist')">
-        <span class="ci-label">✅ Checklist</span>
+        <span class="ci-label">Checklist</span>
       </label>
       <label class="checkbox-item" id="lbl-rubric">
         <input type="checkbox" id="rubric" onchange="toggleChecked(this, 'lbl-rubric')">
-        <span class="ci-label">📊 Evaluation Rubric</span>
+        <span class="ci-label">Evaluation Rubric</span>
       </label>
     </div>
 
@@ -782,7 +774,7 @@
     </div>
   </div>
 
-  <!-- ─────────── STEP 3 ─────────── -->
+  <!-- STEP 3 -->
   <div id="step3" class="card hidden">
     <div class="step-label">Step 03 of 04</div>
     <h2>How detailed should it be?</h2>
@@ -790,12 +782,10 @@
 
     <div class="option-grid">
       <div class="option-card" onclick="setDetail('Guided')">
-        <span class="oc-icon">🧭</span>
         <div class="oc-title">Guided Suggestions</div>
         <div class="oc-desc">Prompts and suggestions to fill in yourself — faster to set up</div>
       </div>
       <div class="option-card" onclick="setDetail('Full Process')">
-        <span class="oc-icon">🗺</span>
         <div class="oc-title">Full Step-by-Step</div>
         <div class="oc-desc">Detailed instructions including stakeholder mapping, risk, and accountability</div>
       </div>
@@ -806,7 +796,7 @@
     </div>
   </div>
 
-  <!-- ─────────── STEP 4 ─────────── -->
+  <!-- STEP 4 -->
   <div id="step4" class="card hidden">
     <div class="step-label">Step 04 of 04</div>
     <h2>Select your principles</h2>
@@ -814,38 +804,38 @@
 
     <div class="section-label">Core Ethics</div>
     <div class="checkbox-group">
-      <label class="checkbox-item" id="lbl-fairness"><input type="checkbox" id="fairness" onchange="toggleChecked(this,'lbl-fairness')"><span class="ci-label">⚖️ Fairness</span></label>
-      <label class="checkbox-item" id="lbl-ethics"><input type="checkbox" id="ethics" onchange="toggleChecked(this,'lbl-ethics')"><span class="ci-label">🧭 Ethics</span></label>
-      <label class="checkbox-item" id="lbl-beneficence"><input type="checkbox" id="beneficence" onchange="toggleChecked(this,'lbl-beneficence')"><span class="ci-label">🤝 Beneficence</span></label>
+      <label class="checkbox-item" id="lbl-fairness"><input type="checkbox" id="fairness" onchange="toggleChecked(this,'lbl-fairness')"><span class="ci-label">Fairness</span></label>
+      <label class="checkbox-item" id="lbl-ethics"><input type="checkbox" id="ethics" onchange="toggleChecked(this,'lbl-ethics')"><span class="ci-label">Ethics</span></label>
+      <label class="checkbox-item" id="lbl-beneficence"><input type="checkbox" id="beneficence" onchange="toggleChecked(this,'lbl-beneficence')"><span class="ci-label">Beneficence</span></label>
     </div>
 
     <div class="section-label">Governance</div>
     <div class="checkbox-group">
-      <label class="checkbox-item" id="lbl-accountability"><input type="checkbox" id="accountability" onchange="toggleChecked(this,'lbl-accountability')"><span class="ci-label">🏛 Accountability</span></label>
-      <label class="checkbox-item" id="lbl-transparency"><input type="checkbox" id="transparency" onchange="toggleChecked(this,'lbl-transparency')"><span class="ci-label">🔍 Transparency</span></label>
-      <label class="checkbox-item" id="lbl-proportionality"><input type="checkbox" id="proportionality" onchange="toggleChecked(this,'lbl-proportionality')"><span class="ci-label">📐 Proportionality</span></label>
+      <label class="checkbox-item" id="lbl-accountability"><input type="checkbox" id="accountability" onchange="toggleChecked(this,'lbl-accountability')"><span class="ci-label">Accountability</span></label>
+      <label class="checkbox-item" id="lbl-transparency"><input type="checkbox" id="transparency" onchange="toggleChecked(this,'lbl-transparency')"><span class="ci-label">Transparency</span></label>
+      <label class="checkbox-item" id="lbl-proportionality"><input type="checkbox" id="proportionality" onchange="toggleChecked(this,'lbl-proportionality')"><span class="ci-label">Proportionality</span></label>
     </div>
 
     <div class="section-label">Data Protection</div>
     <div class="checkbox-group">
-      <label class="checkbox-item" id="lbl-privacy"><input type="checkbox" id="privacy" onchange="toggleChecked(this,'lbl-privacy')"><span class="ci-label">🔒 Privacy</span></label>
-      <label class="checkbox-item" id="lbl-security"><input type="checkbox" id="security" onchange="toggleChecked(this,'lbl-security')"><span class="ci-label">🛡 Security</span></label>
-      <label class="checkbox-item" id="lbl-dataQuality"><input type="checkbox" id="dataQuality" onchange="toggleChecked(this,'lbl-dataQuality')"><span class="ci-label">📋 Data Quality</span></label>
+      <label class="checkbox-item" id="lbl-privacy"><input type="checkbox" id="privacy" onchange="toggleChecked(this,'lbl-privacy')"><span class="ci-label">Privacy</span></label>
+      <label class="checkbox-item" id="lbl-security"><input type="checkbox" id="security" onchange="toggleChecked(this,'lbl-security')"><span class="ci-label">Security</span></label>
+      <label class="checkbox-item" id="lbl-dataQuality"><input type="checkbox" id="dataQuality" onchange="toggleChecked(this,'lbl-dataQuality')"><span class="ci-label">Data Quality</span></label>
     </div>
 
     <div class="section-label">Social Impact</div>
     <div class="checkbox-group">
-      <label class="checkbox-item" id="lbl-inclusivity"><input type="checkbox" id="inclusivity" onchange="toggleChecked(this,'lbl-inclusivity')"><span class="ci-label">🌍 Inclusivity</span></label>
-      <label class="checkbox-item" id="lbl-accessibility"><input type="checkbox" id="accessibility" onchange="toggleChecked(this,'lbl-accessibility')"><span class="ci-label">♿ Accessibility</span></label>
-      <label class="checkbox-item" id="lbl-context"><input type="checkbox" id="context" onchange="toggleChecked(this,'lbl-context')"><span class="ci-label">🗺 Context Awareness</span></label>
-      <label class="checkbox-item" id="lbl-impact"><input type="checkbox" id="impact" onchange="toggleChecked(this,'lbl-impact')"><span class="ci-label">📈 Impact Assessment</span></label>
+      <label class="checkbox-item" id="lbl-inclusivity"><input type="checkbox" id="inclusivity" onchange="toggleChecked(this,'lbl-inclusivity')"><span class="ci-label">Inclusivity</span></label>
+      <label class="checkbox-item" id="lbl-accessibility"><input type="checkbox" id="accessibility" onchange="toggleChecked(this,'lbl-accessibility')"><span class="ci-label">Accessibility</span></label>
+      <label class="checkbox-item" id="lbl-context"><input type="checkbox" id="context" onchange="toggleChecked(this,'lbl-context')"><span class="ci-label">Context Awareness</span></label>
+      <label class="checkbox-item" id="lbl-impact"><input type="checkbox" id="impact" onchange="toggleChecked(this,'lbl-impact')"><span class="ci-label">Impact Assessment</span></label>
     </div>
 
-    <div class="section-label">Process & Growth</div>
+    <div class="section-label">Process &amp; Growth</div>
     <div class="checkbox-group">
-      <label class="checkbox-item" id="lbl-adaptability"><input type="checkbox" id="adaptability" onchange="toggleChecked(this,'lbl-adaptability')"><span class="ci-label">🔄 Adaptability</span></label>
-      <label class="checkbox-item" id="lbl-sustainability"><input type="checkbox" id="sustainability" onchange="toggleChecked(this,'lbl-sustainability')"><span class="ci-label">🌱 Sustainability</span></label>
-      <label class="checkbox-item" id="lbl-collaboration"><input type="checkbox" id="collaboration" onchange="toggleChecked(this,'lbl-collaboration')"><span class="ci-label">🤝 Collaboration</span></label>
+      <label class="checkbox-item" id="lbl-adaptability"><input type="checkbox" id="adaptability" onchange="toggleChecked(this,'lbl-adaptability')"><span class="ci-label">Adaptability</span></label>
+      <label class="checkbox-item" id="lbl-sustainability"><input type="checkbox" id="sustainability" onchange="toggleChecked(this,'lbl-sustainability')"><span class="ci-label">Sustainability</span></label>
+      <label class="checkbox-item" id="lbl-collaboration"><input type="checkbox" id="collaboration" onchange="toggleChecked(this,'lbl-collaboration')"><span class="ci-label">Collaboration</span></label>
     </div>
 
     <div class="nav-row">
@@ -854,7 +844,7 @@
     </div>
   </div>
 
-  <!-- ─────────── FINAL OUTPUT ─────────── -->
+  <!-- FINAL OUTPUT -->
   <div id="final" class="hidden">
 
     <div class="card" style="margin-bottom:20px;">
@@ -862,8 +852,8 @@
       <h2>Generated Meta-Framework</h2>
       <p class="hint-text">Your personalized framework is ready. Download it or explore the template tools below.</p>
       <div class="action-row">
-        <button class="btn btn-primary" onclick="downloadOutput()">⬇ Download .txt</button>
-        <button class="btn btn-secondary restart-btn" onclick="restart()">↺ Start Over</button>
+        <button class="btn btn-primary" onclick="downloadOutput()">Download .txt</button>
+        <button class="btn btn-secondary restart-btn" onclick="restart()">Start Over</button>
       </div>
     </div>
 
@@ -879,7 +869,7 @@
     <!-- TEMPLATE BUTTONS -->
     <div id="templateButtons" style="margin-top:28px;"></div>
 
-    <!-- ─── TEMPLATES ─── -->
+    <!-- TEMPLATES -->
     <div id="templates" class="hidden templates-wrap">
 
       <!-- TABS -->
@@ -887,7 +877,7 @@
 
       <!-- CHECKLIST -->
       <div id="checklistTemplate" class="tpl-card hidden">
-        <h3>✅ Framework Checklist</h3>
+        <h3>Framework Checklist</h3>
 
         <div class="progress-wrap">
           <div class="progress-label">
@@ -912,7 +902,7 @@
         </div>
 
         <div class="checklist-section">
-          <h4>2 — Inputs & Resources</h4>
+          <h4>2 — Inputs &amp; Resources</h4>
           <div class="checklist-row">
             <input type="checkbox" onchange="updateProgress()">
             <textarea placeholder="What data or resources are required?"></textarea>
@@ -951,12 +941,12 @@
           </div>
         </div>
 
-        <button class="btn btn-primary" onclick="downloadChecklist()">⬇ Download Checklist</button>
+        <button class="btn btn-primary" onclick="downloadChecklist()">Download Checklist</button>
       </div>
 
       <!-- PRINCIPLES -->
       <div id="principlesTemplate" class="tpl-card hidden">
-        <h3>📜 Guided Principles Framework</h3>
+        <h3>Guided Principles Framework</h3>
         <p style="font-size:13.5px;color:var(--muted);margin-bottom:20px;">Fill in each principle with how it applies to your specific project context.</p>
 
         <div class="principle-block">
@@ -983,12 +973,12 @@
           <div class="p-row"><label>Action 2</label><input type="text" placeholder="Another concrete action"></div>
         </div>
 
-        <button class="btn btn-primary" style="margin-top:8px;" onclick="downloadPrinciples()">⬇ Download Principles</button>
+        <button class="btn btn-primary" style="margin-top:8px;" onclick="downloadPrinciples()">Download Principles</button>
       </div>
 
       <!-- RUBRIC -->
       <div id="rubricTemplate" class="tpl-card hidden">
-        <h3>📊 Evaluation Rubric</h3>
+        <h3>Evaluation Rubric</h3>
         <p style="font-size:13.5px;color:var(--muted);margin-bottom:20px;">Rate each criterion to evaluate the quality of a decision or project phase.</p>
 
         <table class="rubric-table">
@@ -1046,7 +1036,7 @@
           <li><b>4–5:</b> Poor, reconsider approach</li>
         </ul>
 
-        <button class="btn btn-primary" style="margin-top:16px;" onclick="downloadRubric()">⬇ Download Rubric</button>
+        <button class="btn btn-primary" style="margin-top:16px;" onclick="downloadRubric()">Download Rubric</button>
       </div>
 
     </div><!-- /templates -->
