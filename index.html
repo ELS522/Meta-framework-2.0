@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Framework Builder — Responsible Data Science</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f0f0f;
+    --paper: #f7f4ee;
+    --cream: #ede9df;
+    --gold: #c9a84c;
+    --gold-light: #e8d28e;
+    --rust: #b55a30;
+    --teal: #2a6b6e;
+    --teal-light: #3d9499;
+    --muted: #7a7264;
+    --border: #d4cfc4;
+    --white: #ffffff;
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
+    --shadow-md: 0 8px 32px rgba(0,0,0,0.12);
+    --shadow-lg: 0 24px 64px rgba(0,0,0,0.16);
+    --radius: 4px;
+    --radius-lg: 12px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* ── BACKGROUND TEXTURE ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      radial-gradient(ellipse at 20% 50%, rgba(42,107,110,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(201,168,76,0.07) 0%, transparent 55%),
+      url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c9a84c' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── LAYOUT ── */
+  .page-wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  /* ── HEADER ── */
+  .site-header {
+    text-align: center;
+    margin-bottom: 56px;
+  }
+  .site-header .eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 12px;
+    display: block;
+  }
+  .site-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.25rem);
+    font-weight: 700;
+    line-height: 1.15;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+  .site-header h1 span {
+    color: var(--teal);
+    font-style: italic;
+  }
+  .site-header .sub {
+    margin-top: 14px;
+    font-size: 15px;
+    color: var(--muted);
+    font-weight: 300;
+    max-width: 460px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .header-rule {
+    width: 48px;
+    height: 2px;
+    background: var(--gold);
+    margin: 20px auto 0;
+  }
+
+  /* ── STEP INDICATOR ── */
+  .step-track {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin-bottom: 40px;
+  }
+  .step-dot {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--cream);
+    border: 2px solid var(--border);
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+  }
+  .step-dot.active {
+    background: var(--teal);
+    border-color: var(--teal);
+    color: white;
+    box-shadow: 0 0 0 4px rgba(42,107,110,0.15);
+  }
+  .step-dot.done {
+    background: var(--teal-light);
+    border-color: var(--teal-light);
+    color: white;
+  }
+  .step-line {
+    flex: 1;
+    max-width: 60px;
+    height: 1px;
+    background: var(--border);
+    margin: 0 4px;
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 36px 40px;
+    box-shadow: var(--shadow-md);
+    animation: fadeUp 0.35s ease both;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .step-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+  .card h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 10px;
+    line-height: 1.3;
+  }
+  .card .hint-text {
+    font-size: 13.5px;
+    color: var(--muted);
+    margin-bottom: 24px;
+    line-height: 1.65;
+  }
+  .card .hint-text ul {
+    margin: 8px 0 0 18px;
+  }
+  .card .hint-text li { margin-bottom: 4px; }
+
+  /* ── BUTTONS ── */
+  .btn-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 6px;
+  }
+  .btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13.5px;
+    font-weight: 500;
+    padding: 11px 22px;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-primary {
+    background: var(--teal);
+    color: white;
+  }
+  .btn-primary:hover {
+    background: var(--teal-light);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(42,107,110,0.3);
+  }
+  .btn-ghost {
+    background: transparent;
+    color: var(--teal);
+    border: 1.5px solid var(--teal);
+  }
+  .btn-ghost:hover {
+    background: rgba(42,107,110,0.05);
+    transform: translateY(-1px);
+  }
+  .btn-secondary {
+    background: var(--cream);
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+  .btn-secondary:hover {
+    background: var(--border);
+    color: var(--ink);
+  }
+  .btn-gold {
+    background: var(--gold);
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .btn-gold:hover {
+    background: var(--gold-light);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(201,168,76,0.35);
+  }
+  .btn-wide {
+    width: 100%;
+    justify-content: center;
+    padding: 14px;
+    font-size: 14.5px;
+  }
+
+  /* ── OPTION CARDS (audience/detail) ── */
+  .option-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin-top: 4px;
+  }
+  .option-card {
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: var(--white);
+  }
+  .option-card:hover {
+    border-color: var(--teal);
+    background: rgba(42,107,110,0.03);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+  }
+  .option-card .oc-icon {
+    font-size: 22px;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .option-card .oc-title {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--ink);
+    margin-bottom: 3px;
+  }
+  .option-card .oc-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+
+  /* ── CHECKBOXES ── */
+  .checkbox-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  @media (max-width: 500px) { .checkbox-group { grid-template-columns: 1fr; } }
+
+  .checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.18s;
+    user-select: none;
+  }
+  .checkbox-item:hover {
+    border-color: var(--teal);
+    background: rgba(42,107,110,0.03);
+  }
+  .checkbox-item input[type="checkbox"] {
+    appearance: none;
+    width: 18px; height: 18px;
+    border: 2px solid var(--border);
+    border-radius: 3px;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.18s;
+    position: relative;
+  }
+  .checkbox-item input[type="checkbox"]:checked {
+    background: var(--teal);
+    border-color: var(--teal);
+  }
+  .checkbox-item input[type="checkbox"]:checked::after {
+    content: '';
+    position: absolute;
+    left: 3px; top: 1px;
+    width: 8px; height: 5px;
+    border-left: 2px solid white;
+    border-bottom: 2px solid white;
+    transform: rotate(-45deg);
+  }
+  .checkbox-item.checked-item {
+    border-color: var(--teal);
+    background: rgba(42,107,110,0.04);
+  }
+  .checkbox-item .ci-label {
+    font-size: 13.5px;
+    font-weight: 400;
+    color: var(--ink);
+  }
+
+  /* ── SECTION LABEL ── */
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 22px 0 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── DIVIDER ROW ── */
+  .nav-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 28px;
+    padding-top: 22px;
+    border-top: 1px solid var(--border);
+    gap: 10px;
+  }
+
+  /* ── OUTPUT ── */
+  .output-card {
+    background: #0f1b1c;
+    border-radius: var(--radius-lg);
+    padding: 28px 32px;
+    margin-top: 20px;
+    box-shadow: var(--shadow-lg);
+    animation: fadeUp 0.4s ease both;
+  }
+  .output-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .output-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .od-red   { background: #ff5f57; }
+  .od-yellow{ background: #ffbd2e; }
+  .od-green { background: #28c840; }
+  .output-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 12.5px;
+    color: #a8c4c6;
+    line-height: 1.85;
+    white-space: pre-wrap;
+  }
+  .output-text .line-key { color: #e8d28e; }
+  .output-text .line-section { color: #7dd3cf; font-weight: 500; }
+
+  /* ── TEMPLATE SECTION ── */
+  .templates-wrap {
+    margin-top: 40px;
+    animation: fadeUp 0.4s ease 0.1s both;
+  }
+  .template-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .tab-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 7px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 4px;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .tab-btn:hover, .tab-btn.active {
+    border-color: var(--teal);
+    color: var(--teal);
+    background: rgba(42,107,110,0.05);
+  }
+
+  /* ── TEMPLATE CARDS ── */
+  .tpl-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 28px 32px;
+    box-shadow: var(--shadow-sm);
+  }
+  .tpl-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    color: var(--ink);
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* ── CHECKLIST TEMPLATE ── */
+  .checklist-section { margin-bottom: 24px; }
+  .checklist-section h4 {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 12px;
+  }
+  .checklist-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .checklist-row input[type="checkbox"] {
+    appearance: none;
+    width: 18px; height: 18px;
+    min-width: 18px;
+    border: 2px solid var(--border);
+    border-radius: 3px;
+    cursor: pointer;
+    margin-top: 12px;
+    transition: all 0.18s;
+    position: relative;
+  }
+  .checklist-row input[type="checkbox"]:checked {
+    background: var(--teal);
+    border-color: var(--teal);
+  }
+  .checklist-row input[type="checkbox"]:checked::after {
+    content: '';
+    position: absolute;
+    left: 3px; top: 1px;
+    width: 8px; height: 5px;
+    border-left: 2px solid white;
+    border-bottom: 2px solid white;
+    transform: rotate(-45deg);
+  }
+  .checklist-row textarea {
+    flex: 1;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13.5px;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    resize: vertical;
+    min-height: 42px;
+    color: var(--ink);
+    background: var(--paper);
+    transition: border-color 0.18s;
+    outline: none;
+  }
+  .checklist-row textarea:focus { border-color: var(--teal); }
+  .hint-line {
+    font-size: 11.5px;
+    color: var(--muted);
+    margin: -4px 0 10px 30px;
+    font-style: italic;
+  }
+
+  /* ── PROGRESS BAR ── */
+  .progress-wrap {
+    margin-bottom: 20px;
+  }
+  .progress-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .progress-bar {
+    height: 4px;
+    background: var(--cream);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--teal), var(--teal-light));
+    width: 0%;
+    transition: width 0.4s ease;
+    border-radius: 2px;
+  }
+
+  /* ── RUBRIC TABLE ── */
+  .rubric-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 18px;
+    font-size: 13.5px;
+  }
+  .rubric-table th {
+    background: var(--teal);
+    color: white;
+    padding: 10px 14px;
+    text-align: center;
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+  }
+  .rubric-table th:first-child { text-align: left; }
+  .rubric-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    text-align: center;
+    color: var(--ink);
+  }
+  .rubric-table td:first-child { text-align: left; font-weight: 500; }
+  .rubric-table tr:last-child td { border-bottom: none; }
+  .rubric-table tr:nth-child(even) td { background: var(--paper); }
+  .rubric-table input[type="radio"] {
+    appearance: none;
+    width: 18px; height: 18px;
+    border: 2px solid var(--border);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.18s;
+    position: relative;
+  }
+  .rubric-table input[type="radio"]:checked {
+    border-color: var(--teal);
+    background: var(--teal);
+  }
+  .rubric-table input[type="radio"]:checked::after {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    background: white;
+    border-radius: 50%;
+  }
+
+  .score-display {
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .score-display .score-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: var(--teal);
+    font-weight: 700;
+  }
+  .score-display .score-label {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  /* ── PRINCIPLES TEMPLATE ── */
+  .principle-block {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+    transition: border-color 0.18s;
+  }
+  .principle-block:hover { border-color: var(--teal); }
+  .principle-block h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    color: var(--teal);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .principle-block h4::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--gold);
+    flex-shrink: 0;
+  }
+  .p-row {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .p-row label {
+    font-size: 11px;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .p-row input[type="text"] {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13.5px;
+    padding: 9px 12px;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    background: var(--paper);
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.18s;
+  }
+  .p-row input[type="text"]:focus { border-color: var(--teal); }
+
+  /* ── HIDDEN ── */
+  .hidden { display: none !important; }
+
+  /* ── FOOTER BADGES ── */
+  .action-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ── INTERPRETATION LIST ── */
+  .interp-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    font-size: 13px;
+  }
+  .interp-list li {
+    background: var(--paper);
+    border-radius: 6px;
+    padding: 10px 14px;
+    border-left: 3px solid var(--teal);
+    color: var(--ink);
+  }
+  @media (max-width: 500px) { .interp-list { grid-template-columns: 1fr; } }
+
+  /* ── RESTART BANNER ── */
+  .restart-row {
+    text-align: center;
+    margin-top: 32px;
+  }
+  .restart-row span {
+    font-size: 13px;
+    color: var(--muted);
+    margin-right: 10px;
+  }
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <span class="eyebrow">Responsible Data Science</span>
+    <h1>Framework <span>Builder</span></h1>
+    <p class="sub">Craft a principled, actionable framework tailored to your project or organization in four steps.</p>
+    <div class="header-rule"></div>
+  </header>
+
+  <!-- STEP TRACK -->
+  <div class="step-track" id="stepTrack">
+    <div class="step-dot active" id="dot1">1</div>
+    <div class="step-line"></div>
+    <div class="step-dot" id="dot2">2</div>
+    <div class="step-line"></div>
+    <div class="step-dot" id="dot3">3</div>
+    <div class="step-line"></div>
+    <div class="step-dot" id="dot4">4</div>
+  </div>
+
+  <!-- ─────────── STEP 1 ─────────── -->
+  <div id="step1" class="card">
+    <div class="step-label">Step 01 of 04</div>
+    <h2>Who is this framework for?</h2>
+    <p class="hint-text">Different audiences need different structure and depth. Choose the context that best fits your use case.</p>
+
+    <div class="option-grid">
+      <div class="option-card" onclick="setProject('Student Project')">
+        <span class="oc-icon">🎓</span>
+        <div class="oc-title">Student Projects</div>
+        <div class="oc-desc">Academic or coursework data science projects</div>
+      </div>
+      <div class="option-card" onclick="setProject('Organization')">
+        <span class="oc-icon">🏢</span>
+        <div class="oc-title">Organizations</div>
+        <div class="oc-desc">Company-level teams and enterprise data work</div>
+      </div>
+      <div class="option-card" onclick="setProject('Mixed')">
+        <span class="oc-icon">⚡</span>
+        <div class="oc-title">Mixed / Any</div>
+        <div class="oc-desc">Flexible — suitable for any data science project</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─────────── STEP 2 ─────────── -->
+  <div id="step2" class="card hidden">
+    <div class="step-label">Step 02 of 04</div>
+    <h2>Choose your framework format</h2>
+    <p class="hint-text">Select one or more formats. Each adds a different layer to your framework:
+      <ul>
+        <li><b>Principles</b> — high-level value statements</li>
+        <li><b>Checklist</b> — concrete actionable items</li>
+        <li><b>Rubric</b> — score and evaluate decisions</li>
+      </ul>
+    </p>
+
+    <div class="checkbox-group">
+      <label class="checkbox-item" id="lbl-principles">
+        <input type="checkbox" id="principles" onchange="toggleChecked(this, 'lbl-principles')">
+        <span class="ci-label">📜 Principles Guide</span>
+      </label>
+      <label class="checkbox-item" id="lbl-checklist">
+        <input type="checkbox" id="checklist" onchange="toggleChecked(this, 'lbl-checklist')">
+        <span class="ci-label">✅ Checklist</span>
+      </label>
+      <label class="checkbox-item" id="lbl-rubric">
+        <input type="checkbox" id="rubric" onchange="toggleChecked(this, 'lbl-rubric')">
+        <span class="ci-label">📊 Evaluation Rubric</span>
+      </label>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn btn-secondary" onclick="prev(1)">← Back</button>
+      <button class="btn btn-primary" onclick="nextToDetail()">Continue →</button>
+    </div>
+  </div>
+
+  <!-- ─────────── STEP 3 ─────────── -->
+  <div id="step3" class="card hidden">
+    <div class="step-label">Step 03 of 04</div>
+    <h2>How detailed should it be?</h2>
+    <p class="hint-text">Choose the depth of guidance generated for your framework.</p>
+
+    <div class="option-grid">
+      <div class="option-card" onclick="setDetail('Guided')">
+        <span class="oc-icon">🧭</span>
+        <div class="oc-title">Guided Suggestions</div>
+        <div class="oc-desc">Prompts and suggestions to fill in yourself — faster to set up</div>
+      </div>
+      <div class="option-card" onclick="setDetail('Full Process')">
+        <span class="oc-icon">🗺</span>
+        <div class="oc-title">Full Step-by-Step</div>
+        <div class="oc-desc">Detailed instructions including stakeholder mapping, risk, and accountability</div>
+      </div>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn btn-secondary" onclick="prev(2)">← Back</button>
+    </div>
+  </div>
+
+  <!-- ─────────── STEP 4 ─────────── -->
+  <div id="step4" class="card hidden">
+    <div class="step-label">Step 04 of 04</div>
+    <h2>Select your principles</h2>
+    <p class="hint-text">Choose the dimensions that matter most to your project. You can select as many as you need.</p>
+
+    <div class="section-label">Core Ethics</div>
+    <div class="checkbox-group">
+      <label class="checkbox-item" id="lbl-fairness"><input type="checkbox" id="fairness" onchange="toggleChecked(this,'lbl-fairness')"><span class="ci-label">⚖️ Fairness</span></label>
+      <label class="checkbox-item" id="lbl-ethics"><input type="checkbox" id="ethics" onchange="toggleChecked(this,'lbl-ethics')"><span class="ci-label">🧭 Ethics</span></label>
+      <label class="checkbox-item" id="lbl-beneficence"><input type="checkbox" id="beneficence" onchange="toggleChecked(this,'lbl-beneficence')"><span class="ci-label">🤝 Beneficence</span></label>
+    </div>
+
+    <div class="section-label">Governance</div>
+    <div class="checkbox-group">
+      <label class="checkbox-item" id="lbl-accountability"><input type="checkbox" id="accountability" onchange="toggleChecked(this,'lbl-accountability')"><span class="ci-label">🏛 Accountability</span></label>
+      <label class="checkbox-item" id="lbl-transparency"><input type="checkbox" id="transparency" onchange="toggleChecked(this,'lbl-transparency')"><span class="ci-label">🔍 Transparency</span></label>
+      <label class="checkbox-item" id="lbl-proportionality"><input type="checkbox" id="proportionality" onchange="toggleChecked(this,'lbl-proportionality')"><span class="ci-label">📐 Proportionality</span></label>
+    </div>
+
+    <div class="section-label">Data Protection</div>
+    <div class="checkbox-group">
+      <label class="checkbox-item" id="lbl-privacy"><input type="checkbox" id="privacy" onchange="toggleChecked(this,'lbl-privacy')"><span class="ci-label">🔒 Privacy</span></label>
+      <label class="checkbox-item" id="lbl-security"><input type="checkbox" id="security" onchange="toggleChecked(this,'lbl-security')"><span class="ci-label">🛡 Security</span></label>
+      <label class="checkbox-item" id="lbl-dataQuality"><input type="checkbox" id="dataQuality" onchange="toggleChecked(this,'lbl-dataQuality')"><span class="ci-label">📋 Data Quality</span></label>
+    </div>
+
+    <div class="section-label">Social Impact</div>
+    <div class="checkbox-group">
+      <label class="checkbox-item" id="lbl-inclusivity"><input type="checkbox" id="inclusivity" onchange="toggleChecked(this,'lbl-inclusivity')"><span class="ci-label">🌍 Inclusivity</span></label>
+      <label class="checkbox-item" id="lbl-accessibility"><input type="checkbox" id="accessibility" onchange="toggleChecked(this,'lbl-accessibility')"><span class="ci-label">♿ Accessibility</span></label>
+      <label class="checkbox-item" id="lbl-context"><input type="checkbox" id="context" onchange="toggleChecked(this,'lbl-context')"><span class="ci-label">🗺 Context Awareness</span></label>
+      <label class="checkbox-item" id="lbl-impact"><input type="checkbox" id="impact" onchange="toggleChecked(this,'lbl-impact')"><span class="ci-label">📈 Impact Assessment</span></label>
+    </div>
+
+    <div class="section-label">Process & Growth</div>
+    <div class="checkbox-group">
+      <label class="checkbox-item" id="lbl-adaptability"><input type="checkbox" id="adaptability" onchange="toggleChecked(this,'lbl-adaptability')"><span class="ci-label">🔄 Adaptability</span></label>
+      <label class="checkbox-item" id="lbl-sustainability"><input type="checkbox" id="sustainability" onchange="toggleChecked(this,'lbl-sustainability')"><span class="ci-label">🌱 Sustainability</span></label>
+      <label class="checkbox-item" id="lbl-collaboration"><input type="checkbox" id="collaboration" onchange="toggleChecked(this,'lbl-collaboration')"><span class="ci-label">🤝 Collaboration</span></label>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn btn-secondary" onclick="prev(3)">← Back</button>
+      <button class="btn btn-gold" onclick="generateFramework()">Generate Framework ✦</button>
+    </div>
+  </div>
+
+  <!-- ─────────── FINAL OUTPUT ─────────── -->
+  <div id="final" class="hidden">
+
+    <div class="card" style="margin-bottom:20px;">
+      <div class="step-label">Your Framework</div>
+      <h2>Generated Meta-Framework</h2>
+      <p class="hint-text">Your personalized framework is ready. Download it or explore the template tools below.</p>
+      <div class="action-row">
+        <button class="btn btn-primary" onclick="downloadOutput()">⬇ Download .txt</button>
+        <button class="btn btn-secondary restart-btn" onclick="restart()">↺ Start Over</button>
+      </div>
+    </div>
+
+    <div class="output-card">
+      <div class="output-header">
+        <span class="output-dot od-red"></span>
+        <span class="output-dot od-yellow"></span>
+        <span class="output-dot od-green"></span>
+      </div>
+      <div class="output-text" id="output"></div>
+    </div>
+
+    <!-- TEMPLATE BUTTONS -->
+    <div id="templateButtons" style="margin-top:28px;"></div>
+
+    <!-- ─── TEMPLATES ─── -->
+    <div id="templates" class="hidden templates-wrap">
+
+      <!-- TABS -->
+      <div class="template-tabs" id="templateTabs"></div>
+
+      <!-- CHECKLIST -->
+      <div id="checklistTemplate" class="tpl-card hidden">
+        <h3>✅ Framework Checklist</h3>
+
+        <div class="progress-wrap">
+          <div class="progress-label">
+            <span>Progress</span>
+            <span id="progressPct">0%</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        </div>
+
+        <div class="checklist-section">
+          <h4>1 — Define the Goal</h4>
+          <div class="checklist-row">
+            <input type="checkbox" onchange="updateProgress()">
+            <textarea placeholder="What is the main objective of this project?"></textarea>
+          </div>
+          <div class="hint-line">Be specific. What problem are you solving?</div>
+          <div class="checklist-row">
+            <input type="checkbox" onchange="updateProgress()">
+            <textarea placeholder="Who is this project for?"></textarea>
+          </div>
+          <div class="hint-line">Target audience or end user</div>
+        </div>
+
+        <div class="checklist-section">
+          <h4>2 — Inputs & Resources</h4>
+          <div class="checklist-row">
+            <input type="checkbox" onchange="updateProgress()">
+            <textarea placeholder="What data or resources are required?"></textarea>
+          </div>
+          <div class="checklist-row">
+            <input type="checkbox" onchange="updateProgress()">
+            <textarea placeholder="What constraints or limitations exist?"></textarea>
+          </div>
+        </div>
+
+        <div class="checklist-section">
+          <h4>3 — Process Steps</h4>
+          <div class="checklist-row">
+            <input type="checkbox" onchange="updateProgress()">
+            <textarea placeholder="Step 1:"></textarea>
+          </div>
+          <div class="checklist-row">
+            <input type="checkbox" onchange="updateProgress()">
+            <textarea placeholder="Step 2:"></textarea>
+          </div>
+          <div class="checklist-row">
+            <input type="checkbox" onchange="updateProgress()">
+            <textarea placeholder="Step 3:"></textarea>
+          </div>
+        </div>
+
+        <div class="checklist-section">
+          <h4>4 — Evaluation</h4>
+          <div class="checklist-row">
+            <input type="checkbox" onchange="updateProgress()">
+            <textarea placeholder="How will success be measured?"></textarea>
+          </div>
+          <div class="checklist-row">
+            <input type="checkbox" onchange="updateProgress()">
+            <textarea placeholder="What does failure look like?"></textarea>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" onclick="downloadChecklist()">⬇ Download Checklist</button>
+      </div>
+
+      <!-- PRINCIPLES -->
+      <div id="principlesTemplate" class="tpl-card hidden">
+        <h3>📜 Guided Principles Framework</h3>
+        <p style="font-size:13.5px;color:var(--muted);margin-bottom:20px;">Fill in each principle with how it applies to your specific project context.</p>
+
+        <div class="principle-block">
+          <h4>Transparency</h4>
+          <div class="p-row"><label>Your definition</label><input type="text" placeholder="Define transparency in your project context"></div>
+          <div class="p-row"><label>Why it matters</label><input type="text" placeholder="Why is this important for your project?"></div>
+          <div class="p-row"><label>Action 1</label><input type="text" placeholder="A concrete action you will take"></div>
+          <div class="p-row"><label>Action 2</label><input type="text" placeholder="Another concrete action"></div>
+        </div>
+
+        <div class="principle-block">
+          <h4>Fairness</h4>
+          <div class="p-row"><label>Your definition</label><input type="text" placeholder="Define fairness in your project context"></div>
+          <div class="p-row"><label>Why it matters</label><input type="text" placeholder="Why is this important for your project?"></div>
+          <div class="p-row"><label>Action 1</label><input type="text" placeholder="A concrete action you will take"></div>
+          <div class="p-row"><label>Action 2</label><input type="text" placeholder="Another concrete action"></div>
+        </div>
+
+        <div class="principle-block">
+          <h4>Accountability</h4>
+          <div class="p-row"><label>Your definition</label><input type="text" placeholder="Define accountability in your project context"></div>
+          <div class="p-row"><label>Why it matters</label><input type="text" placeholder="Why is this important for your project?"></div>
+          <div class="p-row"><label>Action 1</label><input type="text" placeholder="A concrete action you will take"></div>
+          <div class="p-row"><label>Action 2</label><input type="text" placeholder="Another concrete action"></div>
+        </div>
+
+        <button class="btn btn-primary" style="margin-top:8px;" onclick="downloadPrinciples()">⬇ Download Principles</button>
+      </div>
+
+      <!-- RUBRIC -->
+      <div id="rubricTemplate" class="tpl-card hidden">
+        <h3>📊 Evaluation Rubric</h3>
+        <p style="font-size:13.5px;color:var(--muted);margin-bottom:20px;">Rate each criterion to evaluate the quality of a decision or project phase.</p>
+
+        <table class="rubric-table">
+          <tr>
+            <th>Criteria</th>
+            <th>4 — Excellent</th>
+            <th>3 — Good</th>
+            <th>2 — Fair</th>
+            <th>1 — Poor</th>
+          </tr>
+          <tr>
+            <td>Transparency</td>
+            <td><input type="radio" name="c1" value="4"></td>
+            <td><input type="radio" name="c1" value="3"></td>
+            <td><input type="radio" name="c1" value="2"></td>
+            <td><input type="radio" name="c1" value="1"></td>
+          </tr>
+          <tr>
+            <td>Fairness</td>
+            <td><input type="radio" name="c2" value="4"></td>
+            <td><input type="radio" name="c2" value="3"></td>
+            <td><input type="radio" name="c2" value="2"></td>
+            <td><input type="radio" name="c2" value="1"></td>
+          </tr>
+          <tr>
+            <td>Accountability</td>
+            <td><input type="radio" name="c3" value="4"></td>
+            <td><input type="radio" name="c3" value="3"></td>
+            <td><input type="radio" name="c3" value="2"></td>
+            <td><input type="radio" name="c3" value="1"></td>
+          </tr>
+          <tr>
+            <td>Impact Awareness</td>
+            <td><input type="radio" name="c4" value="4"></td>
+            <td><input type="radio" name="c4" value="3"></td>
+            <td><input type="radio" name="c4" value="2"></td>
+            <td><input type="radio" name="c4" value="1"></td>
+          </tr>
+        </table>
+
+        <button class="btn btn-ghost" onclick="calculateRubricScore()" style="margin-bottom:16px;">Calculate Score</button>
+
+        <div class="score-display" id="scoreDisplay">
+          <div>
+            <div class="score-label">Total Score</div>
+            <div class="score-num" id="scoreNum">—</div>
+          </div>
+          <div style="font-size:13px;color:var(--muted);text-align:right;" id="scoreVerdict">Select ratings above</div>
+        </div>
+
+        <ul class="interp-list">
+          <li><b>14–16:</b> Strong alignment</li>
+          <li><b>10–13:</b> Moderate, minor gaps</li>
+          <li><b>6–9:</b> Weak, significant concerns</li>
+          <li><b>4–5:</b> Poor, reconsider approach</li>
+        </ul>
+
+        <button class="btn btn-primary" style="margin-top:16px;" onclick="downloadRubric()">⬇ Download Rubric</button>
+      </div>
+
+    </div><!-- /templates -->
+
+  </div><!-- /final -->
+
+</div><!-- /page-wrap -->
+
+<script>
+  let projectType = "";
+  let detailLevel = "";
+
+  function show(step) {
+    document.querySelectorAll("[id^=step], #final").forEach(el => el.classList.add("hidden"));
+    document.getElementById(step).classList.remove("hidden");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    updateDots(parseInt(step.replace("step","")) || 5);
+  }
+
+  function updateDots(active) {
+    for (let i = 1; i <= 4; i++) {
+      const d = document.getElementById("dot" + i);
+      d.classList.remove("active","done");
+      if (i === active) d.classList.add("active");
+      else if (i < active) d.classList.add("done");
+    }
+  }
+
+  function toggleChecked(cb, lblId) {
+    const lbl = document.getElementById(lblId);
+    if (cb.checked) lbl.classList.add("checked-item");
+    else lbl.classList.remove("checked-item");
+  }
+
+  function setProject(type) {
+    projectType = type;
+    show("step2");
+  }
+
+  function nextToDetail() {
+    show("step3");
+  }
+
+  function setDetail(level) {
+    detailLevel = level;
+    show("step4");
+  }
+
+  function prev(n) { show("step" + n); }
+
+  function generateFramework() {
+    const ids = ["fairness","ethics","beneficence","accountability","transparency",
+                 "proportionality","privacy","security","dataQuality","inclusivity",
+                 "accessibility","context","impact","adaptability","sustainability","collaboration"];
+    const selected = ids.filter(id => document.getElementById(id)?.checked);
+
+    let text = "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+    text += "  META-FRAMEWORK — RESPONSIBLE DATA SCIENCE\n";
+    text += "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n";
+    text += `AUDIENCE:       ${projectType}\n`;
+    text += `DETAIL LEVEL:   ${detailLevel}\n`;
+    text += `DIMENSIONS:     ${selected.length ? selected.join(", ") : "None selected"}\n\n`;
+    text += "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+    text += "  SUGGESTED STRUCTURE\n";
+    text += "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n";
+
+    text += "01. DEFINE CONTEXT & SCOPE\n";
+    text += "    ─ What is the project or organizational context?\n";
+    text += "    ─ Who are the stakeholders?\n";
+    text += "    ─ What are the goals and constraints?\n\n";
+
+    text += "02. TRANSLATE PRINCIPLES INTO ACTIONS\n";
+    if (selected.length === 0) {
+      text += "    ─ (No dimensions selected — add them in Step 4)\n";
+    } else {
+      selected.forEach(p => {
+        const name = p.charAt(0).toUpperCase() + p.slice(1);
+        text += `    ─ ${name}: Define concrete actions, responsibilities,\n`;
+        text += `      and measurable outcomes.\n`;
+      });
+    }
+    text += "\n";
+
+    text += "03. RISK ASSESSMENT\n";
+    text += "    ─ Identify potential harms or failures\n";
+    text += "    ─ Who is most vulnerable?\n";
+    text += "    ─ Mitigation strategies\n\n";
+
+    text += "04. ACCOUNTABILITY & REVIEW\n";
+    text += "    ─ Assign ownership\n";
+    text += "    ─ Define review schedule\n";
+    text += "    ─ Feedback collection and reporting process\n\n";
+
+    if (detailLevel === "Full Process") {
+      text += "05. IMPLEMENTATION PLAN\n";
+      text += "    ─ Timeline\n";
+      text += "    ─ Responsibilities\n";
+      text += "    ─ Documentation requirements\n\n";
+
+      text += "06. CONTINUOUS REVISION LOOP\n";
+      text += "    ─ Regular scheduled updates\n";
+      text += "    ─ Stakeholder feedback integration\n";
+      text += "    ─ Framework version control\n\n";
+    }
+
+    text += "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+
+    // Render with colored spans
+    const el = document.getElementById("output");
+    el.innerHTML = "";
+    text.split("\n").forEach(line => {
+      const span = document.createElement("div");
+      if (/^[0-9]{2}\./.test(line)) {
+        span.innerHTML = `<span class="line-section">${escHtml(line)}</span>`;
+      } else if (/^━/.test(line) || /^  [A-Z]/.test(line)) {
+        span.innerHTML = `<span class="line-key">${escHtml(line)}</span>`;
+      } else {
+        span.textContent = line;
+      }
+      el.appendChild(span);
+    });
+
+    // Build template buttons + tabs
+    const formats = [];
+    if (document.getElementById("checklist").checked) formats.push({id:"checklistTemplate", label:"Checklist"});
+    if (document.getElementById("principles").checked) formats.push({id:"principlesTemplate", label:"Principles"});
+    if (document.getElementById("rubric").checked) formats.push({id:"rubricTemplate", label:"Rubric"});
+
+    const btnWrap = document.getElementById("templateButtons");
+    const templatesEl = document.getElementById("templates");
+    const tabsEl = document.getElementById("templateTabs");
+
+    if (formats.length > 0) {
+      btnWrap.innerHTML = `<div class="section-label">Template Tools</div>`;
+      const row = document.createElement("div");
+      row.className = "btn-group";
+      formats.forEach((f,i) => {
+        const b = document.createElement("button");
+        b.className = "btn btn-ghost";
+        b.textContent = "Open " + f.label;
+        b.onclick = () => { openTemplate(f.id, formats, tabsEl, templatesEl); };
+        row.appendChild(b);
+      });
+      btnWrap.appendChild(row);
+    } else {
+      btnWrap.innerHTML = "";
+    }
+
+    show("final");
+    document.getElementById("final").classList.remove("hidden");
+    updateDots(5);
+  }
+
+  function openTemplate(id, formats, tabsEl, templatesEl) {
+    templatesEl.classList.remove("hidden");
+    // Hide all
+    formats.forEach(f => document.getElementById(f.id).classList.add("hidden"));
+    document.getElementById(id).classList.remove("hidden");
+    // Tabs
+    tabsEl.innerHTML = "";
+    formats.forEach(f => {
+      const b = document.createElement("button");
+      b.className = "tab-btn" + (f.id === id ? " active" : "");
+      b.textContent = f.label;
+      b.onclick = () => { openTemplate(f.id, formats, tabsEl, templatesEl); };
+      tabsEl.appendChild(b);
+    });
+    templatesEl.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function escHtml(s) {
+    return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  }
+
+  function restart() { location.reload(); }
+
+  function updateProgress() {
+    const cbs = document.querySelectorAll('#checklistTemplate input[type="checkbox"]');
+    const done = document.querySelectorAll('#checklistTemplate input[type="checkbox"]:checked');
+    const pct = Math.round((done.length / cbs.length) * 100);
+    document.getElementById("progressPct").textContent = pct + "%";
+    document.getElementById("progressFill").style.width = pct + "%";
+  }
+
+  function calculateRubricScore() {
+    let total = 0, count = 0;
+    for (let i = 1; i <= 4; i++) {
+      const sel = document.querySelector(`#rubricTemplate input[name="c${i}"]:checked`);
+      if (sel) { total += parseInt(sel.value); count++; }
+    }
+    document.getElementById("scoreNum").textContent = count > 0 ? total : "—";
+    let verdict = "Select ratings above";
+    if (count === 4) {
+      if (total >= 14) verdict = "Strong alignment ✦";
+      else if (total >= 10) verdict = "Moderate — minor improvements";
+      else if (total >= 6) verdict = "Weak — significant concerns";
+      else verdict = "Poor — reconsider approach";
+    }
+    document.getElementById("scoreVerdict").textContent = verdict;
+  }
+
+  function downloadOutput() {
+    const raw = document.getElementById("output").innerText;
+    downloadFile(raw, "meta-framework.txt");
+  }
+  function downloadChecklist() {
+    let out = "FRAMEWORK CHECKLIST\n" + "=".repeat(40) + "\n\n";
+    document.querySelectorAll("#checklistTemplate textarea").forEach((t,i) => {
+      out += `${i+1}. ${t.value || "(empty)"}\n\n`;
+    });
+    downloadFile(out, "framework-checklist.txt");
+  }
+  function downloadPrinciples() {
+    let out = "PRINCIPLES FRAMEWORK\n" + "=".repeat(40) + "\n\n";
+    document.querySelectorAll("#principlesTemplate .principle-block").forEach(block => {
+      const title = block.querySelector("h4").textContent;
+      out += `[ ${title} ]\n`;
+      block.querySelectorAll("input[type=text]").forEach(inp => {
+        out += `  ${inp.value || "(empty)"}\n`;
+      });
+      out += "\n";
+    });
+    downloadFile(out, "framework-principles.txt");
+  }
+  function downloadRubric() {
+    let out = "EVALUATION RUBRIC\n" + "=".repeat(40) + "\n\n";
+    const labels = ["Transparency","Fairness","Accountability","Impact Awareness"];
+    let total = 0;
+    for (let i = 1; i <= 4; i++) {
+      const sel = document.querySelector(`#rubricTemplate input[name="c${i}"]:checked`);
+      const val = sel ? sel.value : "—";
+      if (sel) total += parseInt(val);
+      out += `${labels[i-1]}: ${val}/4\n`;
+    }
+    out += `\nTotal: ${total}/16\n`;
+    downloadFile(out, "framework-rubric.txt");
+  }
+  function downloadFile(content, filename) {
+    const blob = new Blob([content], { type: "text/plain" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    a.click();
+  }
+</script>
+</body>
+</html>
